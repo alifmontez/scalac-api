@@ -30,7 +30,7 @@ def base_url():
 
         if line != "%":
             if first_line:
-                id = line[1:9]
+                id = line[1:8]
                 joke.append("http://bash.org.pl/" + id)
                 first_line = False
             else:
