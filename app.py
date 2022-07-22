@@ -19,7 +19,7 @@ def base_url():
     joke_count = 0
     joke = []
     data = {}
-
+    sub_data = {}
 
     for line in r.iter_lines():
 
@@ -31,14 +31,16 @@ def base_url():
         if line != "%":
             if first_line:
                 id = line[1:8]
-                joke.append("http://bash.org.pl/" + id)
                 first_line = False
             else:
                 joke.append(line)
         else:
-            data[id] = joke
+            sub_data['url'] = "http://bash.org.pl/" + id
+            sub_data['joke'] = joke
+            data[id] = sub_data
             joke_count+=1
             joke = []
+            sub_data = {}
             first_line = True
 
     response = app.response_class(
