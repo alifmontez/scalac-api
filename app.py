@@ -13,25 +13,35 @@ def base_url():
 
     r = requests.get('http://bash.org.pl/text', stream=True)
 
+    first_line = True
+    id = 0
+
     joke_count = 0
-    joke = ""
+    joke = []
     data = {}
 
+
     for line in r.iter_lines():
-        line = str(line)[2:][:-1]
+
+        line = line.decode('utf-8')
 
         if joke_count == 100:
             break
 
         if line != "%":
-            joke += line + "\\n"
+            if first_line:
+                id = line[1:9]
+                first_line = False
+            else:
+                joke.append(line)
         else:
-            data[joke_count] = joke
+            data[id] = joke
             joke_count+=1
-            joke = ""
+            joke = []
+            first_line = True
 
     response = app.response_class(
-        response=json.dumps(data),
+        response=json.dumps(data, indent=4, ensure_ascii=False),
         status=200,
         mimetype='application/json'
     )
